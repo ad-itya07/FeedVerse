@@ -8,7 +8,7 @@ const Navbar = () => {
 
   // console.log(currentUser?.user_metadata.avatar_url);
   return (
-    <nav className="bg-gray-900 text-white shadow-md">
+    <nav className="bg-gray-900 text-white shadow-md border-b border-gray-400 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <div className="text-xl font-bold">
