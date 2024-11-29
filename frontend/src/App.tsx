@@ -1,10 +1,24 @@
-function App() {
+import { Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import HomePage from "./pages/HomePage.tsx";
+import FeedsLayout from "./layouts/FeedsLayout.tsx";
 
+function App() {
   return (
     <>
-      <h1 className="text-red-400 text-3xl">Hello</h1>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <FeedsLayout>
+              <HomePage />
+            </FeedsLayout>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
