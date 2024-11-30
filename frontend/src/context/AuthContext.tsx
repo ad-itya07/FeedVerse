@@ -19,6 +19,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userSession , setUserSession] = useState<any>(null);
 
   useEffect(() => {
     const userSession = async () => {
@@ -30,6 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (error) {
         console.error("Error fetching data: ", error);
       } else {
+        setUserSession(session);
         setCurrentUser(session?.user);
       }
       setIsLoading(false);
@@ -55,6 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const value = {
+    userSession,
     currentUser,
     isLoading,
     logout,
