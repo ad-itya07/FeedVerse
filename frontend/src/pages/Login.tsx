@@ -2,13 +2,24 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase/SupabaseClient";
+import { useCreateUserMutation } from "../redux/apis/user/userApi";
 
 const Login = () => {
+  const [createUser] = useCreateUserMutation();
   const navigate = useNavigate();
 
-  supabase.auth.onAuthStateChange((event) => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    const supabaseId = session?.user?.id;
+    const email = session?.user?.email;
+    const name = session?.user?.user_metadata?.full_name;
+
     if (event === "SIGNED_IN") {
-        // console.log(session?.user)
+      try {
+        const response = await createUser({ supabaseId, email, name }).unwrap();
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
       navigate("/");
     }
   });
@@ -24,6 +35,7 @@ const Login = () => {
           appearance={{ theme: ThemeSupa }}
           theme="dark"
           providers={["google"]}
+          // redirectTo={window.location.href}
         />
         <p className="mt-4 text-sm text-gray-400 text-center">
           By signing in, you agree to our{" "}
@@ -33,7 +45,8 @@ const Login = () => {
           and{" "}
           <a href="/privacy" className="text-blue-400 hover:underline">
             Privacy Policy
-          </a>.
+          </a>
+          .
         </p>
       </div>
     </div>
