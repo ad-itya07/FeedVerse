@@ -13,7 +13,7 @@ const FeedsLayout = ({ children }: Props) => {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <div className="w-64 h-full overflow-x-hidden overflow-y-auto">
+        <div className="w-auto h-full overflow-x-hidden overflow-y-auto">
           <Sidebar />
         </div>
 
