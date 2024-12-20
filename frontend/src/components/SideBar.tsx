@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Menu } from "lucide-react";
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const categories = [
     { id: 1, name: "Category 1" },
     { id: 2, name: "Category 2" },
@@ -25,27 +29,67 @@ const Sidebar = () => {
     { id: 20, name: "Category 20" },
   ];
 
+  // Track window width on resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <aside className="bg-[#111827]  text-gray-200 w-64 h-screen overflow-auto md:block border-r  border-gray-400 sticky top-0 z-30">
-      <div className="flex  justify-center">
-      <div className="p-4 border-b w-[80%] border-gray-700 flex justify-center">
-        <h2 className="text-xl font-bold">Your Verses</h2>
+    <aside
+      className={`bg-[#111827] text-gray-200 ${
+        isOpen ? "w-64" : "w-16"
+      } ${windowWidth >= 768 ? "md:w-64" : ""} h-screen overflow-y-auto border-r border-gray-400 sticky top-0 z-30 transition-all duration-300`}
+    >
+      {/* Header with Hamburger Menu */}
+      <div
+        className={`flex items-center ${
+          isOpen ? "justify-between" : "justify-center"
+        } px-4 py-4 border-b border-gray-700`}
+      >
+        <button
+          className="md:hidden text-gray-200 focus:outline-none"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+        {(isOpen || windowWidth >= 768) && (
+          <h2 className="text-xl font-bold">Your Verses</h2>
+        )}
       </div>
-      </div>
-      <ul className="mt-6 space-y-3 px-4">
-        {categories.map((category) => (
+
+      {/* Sidebar Content */}
+      <ul
+        className={`mt-6 space-y-3 px-4 ${
+          isOpen || windowWidth >= 768 ? "block" : "hidden"
+        } transition-all duration-300`}
+      >
+        {categories.slice(0, 6).map((category) => (
           <li key={category.id}>
             <Link
               to={`/category/${category.id}`}
-              className="block px-4 py-3 rounded-md text-lg hover:bg-[#334155] transition-all duration-200"
+              className="block px-4 py-3 rounded-md text-lg hover:bg-[#334155] group-active:bg-[#334155] transition-all duration-200"
             >
               {category.name}
             </Link>
           </li>
         ))}
+        <li>
+          <Link
+            to="/categories"
+            className="block px-4 py-3 rounded-md text-lg text-center font-semibold text-[#3B82F6] hover:bg-[#334155] transition-all duration-200"
+          >
+            View All
+          </Link>
+        </li>
       </ul>
     </aside>
   );
 };
 
 export default Sidebar;
+
